@@ -198,6 +198,12 @@ class CountMinSketch(object):
                 del fm
             del table
 
+    # x is another CountMinSketch object of same dimensions
+    def combine(self, x):
+        for tbl1, tbl2 in zip(self.tables, x.tables):
+            for fm1, fm2 in zip(tbl1, tbl2):
+                fm1.update(fm2)
+
     #def __len__(self):
         #return self.n
 

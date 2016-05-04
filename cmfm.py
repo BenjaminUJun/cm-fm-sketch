@@ -204,6 +204,11 @@ class CountMinSketch(object):
             for fm1, fm2 in zip(tbl1, tbl2):
                 fm1.update(fm2)
 
+    # combine a list of CM sketches
+    def combineAll(self, lst):
+        for sk in lst:
+            self.combine(sk)
+
     #def __len__(self):
         #return self.n
 

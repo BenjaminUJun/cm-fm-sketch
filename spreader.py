@@ -8,10 +8,12 @@ import time
 
 #f = sys.argv[1]
 k = int(sys.argv[1]) # arbitrary value for superspreader
+h_size = int(sys.argv[2]) # size of each hash table
+h_num = int(sys.argv[3]) # number of hash tables
 
 def cmfmFunction( threadName, fileName, q):
 	# initialize CM-FM Sketch
-	sketch = cmfm.CountMinSketch(1000, 10)
+	sketch = cmfm.CountMinSketch(h_size, h_num)
 
 	with open(fileName, 'r') as fin:
 	    for line in fin:
@@ -32,12 +34,14 @@ def cmfmFunction( threadName, fileName, q):
 
 print "Starting CM-FM"
 print "k = " + str(sys.argv[1])
-print "files: " + str(sys.argv[2:])
+print "hash table size = " + str(sys.argv[2])
+print "hash table number = " + str(sys.argv[3])
+print "files: " + str(sys.argv[4:])
 
 threadList = []
 results = []
 i = 0
-for fileName in sys.argv[2:]:
+for fileName in sys.argv[4:]:
 	i += 1
 	try:
 		threadName = "Thread" + str(i)
@@ -71,11 +75,11 @@ for result in results:
 
 print "Final processing"
 
-fwrite = "dist-%d-superspreader.txt" % k
+fwrite = "dist-%d-superspreader-%d-%d.txt" % (k, h_size, h_num)
 
 i = 0
 with open(fwrite, 'w+') as fout:
-	for fileName in sys.argv[2:]:
+	for fileName in sys.argv[4:]:
 		with open(fileName, 'r') as fin:
 		    fin.readline()
 		    #print "processing" + fileName

@@ -1,5 +1,6 @@
 import cmfm
 import sys
+import time
 
 import threading
 from threading import Thread
@@ -41,6 +42,8 @@ print "files: " + str(sys.argv[4:])
 threadList = []
 results = []
 i = 0
+
+cm_fm_start_time = time.time()
 for fileName in sys.argv[4:]:
 	i += 1
 	try:
@@ -58,8 +61,10 @@ for thread in threadList:
 	thread.join()
 	print thread.name + " ended"
 
+print("--- Building sketches took %s seconds ---" % (time.time() - cm_fm_start_time))
 
 
+combine_start_time = time.time()
 print "Combining sketches"
 primarySketch=None
 i = 0
@@ -71,10 +76,11 @@ for result in results:
 	else:
 		primarySketch.combine(result.get())
 
+print("--- Combining sketches took %s seconds ---" % (time.time() - combine_start_time))
 
 
 print "Final processing"
-
+final_start_time = time.time()
 fwrite = "dist-%d-superspreader-%d-%d.txt" % (k, h_size, h_num)
 
 i = 0
@@ -93,6 +99,8 @@ with open(fwrite, 'w+') as fout:
 		            fout.write(src + '\n')
 		        #fout.write(src + " " + str(count) + '\n')
 		i += 1
+
+print("--- Final step took %s seconds ---" % (time.time() - final_start_time))
 print "Done processing!!"
 
 #print "Cleaning up!!"
